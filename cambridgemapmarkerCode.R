@@ -38,8 +38,7 @@ map + stat_density2d(
     scale_fill_gradient(low = "black", high = "red")
 
 
-
+#Plotly with toggle
 plot_ly(crashes, lon = lon, lat = lat, text = Day.Of.Week,
-        marker = list( line = list(width = 0)),
-        color = Day.Of.Week, type = 'scattergeo', locationmode = 'USA-states') %>%
+        marker = list( line = list(width = 0)) type = 'scattergeo', locationmode = 'USA-states') %>%
     layout(title = '2014 US city populations<br>(Click legend to toggle)')
