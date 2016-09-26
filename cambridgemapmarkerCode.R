@@ -42,3 +42,10 @@ map + stat_density2d(
 plot_ly(crashes, lon = lon, lat = lat, text = Day.Of.Week,
         marker = list( line = list(width = 0)) type = 'scattergeo', locationmode = 'USA-states') %>%
     layout(title = '2014 US city populations<br>(Click legend to toggle)')
+
+
+#Geocoding in R
+
+x <- crashes[1:200,]
+geocoded <- geocode(paste(x$Steet.Name, x$Location, sep = " ", collapse = NULL))
+geocoded
