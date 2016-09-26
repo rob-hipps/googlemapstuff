@@ -39,9 +39,8 @@ map + stat_density2d(
 
 
 #Plotly with toggle
-plot_ly(crashes, lon = lon, lat = lat, text = Day.Of.Week,
-        marker = list( line = list(width = 0)) type = 'scattergeo', locationmode = 'USA-states') %>%
-    layout(title = '2014 US city populations<br>(Click legend to toggle)')
+plot_ly(crashes, lon = Longitude, lat = Latitude, text = Day.Of.Week,
+        marker = Crash.Number, type = 'scattergeo', locationmode = 'USA-states') 
 
 
 #Geocoding in R
@@ -49,3 +48,7 @@ plot_ly(crashes, lon = lon, lat = lat, text = Day.Of.Week,
 x <- crashes[1:200,]
 geocoded <- geocode(paste(x$Steet.Name, x$Location, sep = " ", collapse = NULL))
 geocoded
+
+#plotly map of geocoded addresses
+plot_ly(geocoded, lat = lat, lon = lon,
+        type = 'scattergeo', locationmode = 'USA-states', mode = 'markers')
