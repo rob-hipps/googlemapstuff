@@ -1,4 +1,5 @@
 library(ggmap)
+library(dplyr)
 
 #cambridge crash data
 crashes <- read.csv(file.choose(), header=T)
@@ -39,7 +40,7 @@ map + stat_density2d(
 
 
 #Plotly with toggle
-plot_ly(crashes, lon = Longitude, lat = Latitude, text = Day.Of.Week,
+plot_ly(crashes, lon = Longitude, lat = Latitude, text = Date.Time,
         marker = Crash.Number, type = 'scattergeo', locationmode = 'USA-states') 
 
 
@@ -52,3 +53,10 @@ geocoded
 #plotly map of geocoded addresses
 plot_ly(geocoded, lat = lat, lon = lon,
         type = 'scattergeo', locationmode = 'USA-states', mode = 'markers')
+
+
+
+number <- ddply(crashes,c("Day.Of.Week") ,summarise,
+                number = length(Day.Of.Week))
+number
+
