@@ -1,5 +1,6 @@
 library(ggmap)
 library(dplyr)
+library(data.table)
 
 #cambridge crash data
 crashes <- read.csv(file.choose(), header=T)
@@ -17,9 +18,12 @@ ggmap(map) +
 
 
 #Route map
-route_df <- route(from = "cambridge, ma",
+route_df <- as.data.route(from = "cambridge, ma",
                   to = "adams,ma",
-                  structure = "route")
+                  structure = "route",
+                  output = "all")
+
+
 
 my_map <- get_map("massachusetts", zoom = 7)
 
