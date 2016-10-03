@@ -23,6 +23,8 @@ route_df <- as.data.route(from = "cambridge, ma",
                   structure = "route",
                   output = "all")
 
+#Make list of turn lat long's available in a list for extraction.
+df <- data.frame(matrix(unlist(route_df), nrow=132, byrow=T))
 
 
 my_map <- get_map("massachusetts", zoom = 7)
