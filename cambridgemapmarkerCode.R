@@ -1,6 +1,8 @@
 library(ggmap)
 library(dplyr)
 library(data.table)
+library(ggplot2)
+library(plyr)
 
 #cambridge crash data
 crashes <- read.csv(file.choose(), header=T)
@@ -18,13 +20,16 @@ ggmap(map) +
 
 
 #Route map
-route_df <- as.data.route(from = "cambridge, ma",
+route_df <- route(from = "cambridge, ma",
                   to = "adams,ma",
                   structure = "route",
                   output = "all")
 
+#route_df <- as.data.frame(route_df)
+
 #Make list of turn lat long's available in a list for extraction.
 df <- data.frame(matrix(unlist(route_df), nrow=132, byrow=T))
+laply(route_df[[1]], function(x) laply(x, identity))
 
 
 my_map <- get_map("massachusetts", zoom = 7)
@@ -66,3 +71,21 @@ number
 
 
 #seems like the bottleneck is to get the information from the route and apply it to a model. 
+
+#get data in
+iowacrashes <- read.csv(file.choose(),header=T)
+iowaroute <- read.csv(file.choose(),header=T)
+
+#trim lats and longs to make them join-able
+iowacrashes$Latitude = substr(iowacrashes$Latitude,1,nchar(iowacrashes$Latitude)-3)
+iowacrashes$Longitude = substr(iowacrashes$Longitude,1,nchar(iowacrashes$Longitude)-3)
+
+#bit lazy but makes the join easier
+iowacrashes$lat <- iowacrashes$Latitude
+iowacrashes$lon <- iowacrashes$Longitude
+
+#merge the sets
+crashesalongroute <- merge(iowacrashes, iowaroute, by=c("lat","lon"))
+
+#examine the crashes that have occurred along the route
+crashesalongroute
