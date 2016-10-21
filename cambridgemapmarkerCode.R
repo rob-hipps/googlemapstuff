@@ -89,3 +89,10 @@ crashesalongroute <- merge(iowacrashes, iowaroute, by=c("lat","lon"))
 
 #examine the crashes that have occurred along the route
 crashesalongroute
+
+crashtable <- ddply(crashesalongroute, "CRASH_KEY", summarise,
+                       totalcost = sum(PROPDMG))
+                       
+
+ggplot(crashtable, aes(x=totalcost)) +
+    geom_histogram(binwidth=.5, colour="black", fill="white")
