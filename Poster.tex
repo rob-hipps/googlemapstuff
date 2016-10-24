@@ -1,0 +1,209 @@
+%\title{LaTeX Portrait Poster Template}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% a0poster Portrait Poster
+% LaTeX Template
+% Version 1.0 (22/06/13)
+%
+% The a0poster class was created by:
+% Gerlinde Kettl and Matthias Weiser (tex@kettl.de)
+% 
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[a0,portrait]{a0poster}
+
+\usepackage{multicol} % This is so we can have multiple columns of text side-by-side
+\columnsep=100pt % This is the amount of white space between the columns in the poster
+\columnseprule=3pt % This is the thickness of the black line between the columns in the poster
+
+\usepackage[svgnames]{xcolor} % Specify colors by their 'svgnames', for a full list of all colors available see here: http://www.latextemplates.com/svgnames-colors
+
+\usepackage{times} % Use the times font
+%\usepackage{palatino} % Uncomment to use the Palatino font
+
+\usepackage{graphicx} % Required for including images
+\graphicspath{{figures/}} % Location of the graphics files
+\usepackage{booktabs} % Top and bottom rules for table
+\usepackage[font=small,labelfont=bf]{caption} % Required for specifying captions to tables and figures
+\usepackage{amsfonts, amsmath, amsthm, amssymb} % For math fonts, symbols and environments
+\usepackage{wrapfig} % Allows wrapping text around tables and figures
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	POSTER HEADER 
+%----------------------------------------------------------------------------------------
+
+% The header is divided into two boxes:
+% The first is 75% wide and houses the title, subtitle, names, university/organization and contact information
+% The second is 25% wide and houses a logo for your university/organization or a photo of you
+% The widths of these boxes can be easily edited to accommodate your content as you see fit
+
+\begin{minipage}[b]{0.75\linewidth}
+\veryHuge \color{NavyBlue} \textbf{Route Safety Rating} \color{Black}\\ % Title
+\Huge\textit{Using Historic Data to Predict Route Safety}\\[2cm] % Subtitle
+\huge \textbf{Robert Hipps}\\[0.5cm] % Author(s)
+\huge Saint Peter's University\\[0.4cm] % University/organization
+\Large \texttt{rhipps@saintpeters.edu}\\
+\end{minipage}
+%
+\begin{minipage}[b]{0.25\linewidth}
+\includegraphics[width=20cm]{saintpeters.png}\\
+\end{minipage}
+
+\vspace{1cm} % A bit of extra whitespace between the header and poster content
+
+%----------------------------------------------------------------------------------------
+
+\begin{multicols}{2} % This is how many columns your poster will be broken into, a portrait poster is generally split into 2 columns
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\color{Navy} % Navy color for the abstract
+
+\begin{abstract}
+Examining historic traffic data can highlight certain areas that are troublesome for drivers to navigate. Detailed data on the events surrounding these accidents have been made publicly available and can be used to help determine how much money a particular route may cost. This data can be manipulated into a safety rating that captures the risks involved to the driver and the company that insures them.
+\end{abstract}
+
+%----------------------------------------------------------------------------------------
+%	INTRODUCTION
+%----------------------------------------------------------------------------------------
+
+\color{SaddleBrown} % SaddleBrown color for the introduction
+
+\section*{Introduction}
+Traffic safety is a complex and expensive issue. For the United States it costs roughly 3.5 percent of the Gross Nation Product \cite{elvik2000much}. This equates to roughly 586.5 billion dollars per year. Insurance companies play an important role in paying out the claims on these accidents and therefore need to accurately charge customers premiums. The more accurate a company can be with the premiums the better it is for the company and the consumer. 
+
+With an abundance of data detailing important factors present at the time of an accident, accurate predictions can be made about likelihood of accidents and how much they may cost, given a specific route that the driver is taking. This level of granularity created by big data and computing power could help give rise to more tailored forms of charging for auto insurance. Pay-As-You-Drive is an idea that has garnered some attention lately and some insurance firms are looking to build this out \cite{desyllas2013profiting}. Charging a mile by mile rate based on this data would allow for a lesser premium and increased leverage against competitors \cite{edlin1999per}. This all begins with the ability to examine the safety of specific routes.
+
+\color{DarkSlateGray}
+\section*{Data}
+There were 441,695 crashes in the data set that included 42 variables. The latitude and longitude of route paths were determined. These latitudes and longitudes were examined alongside the traffic data. This resulted in a listing of crashes and additional information such as vehicles, the cost of the damage, weather, and date. To obtain crash rates, annual average daily traffic (AADT) was used as a denominator.
+%----------------------------------------------------------------------------------------
+%	OBJECTIVES
+%----------------------------------------------------------------------------------------
+
+\color{DarkSlateGray} % DarkSlateGray color for the rest of the content
+
+%----------------------------------------------------------------------------------------
+%	MATERIALS AND METHODS
+%----------------------------------------------------------------------------------------
+
+\section*{Method}
+
+A large and detailed crash data set was obtained to base a number of the calculation from. Longitude and latitudes were obtained from the R interface with the package ggmap. SQL concepts were used within the R Studio environment in order to combine these data sets in order to see the crash data of the various routes. Traffic volume was then incorporated into the analysis in order to see the impact heavy traffic had on the crash locations. 
+
+%------------------------------------------------
+
+\subsection*{Critical Code}
+
+A key component of my analytic process is the join of latitude and longitude in R Studio that results in the subset of the crash data representing the number of troublesome locations along the route. 
+
+\begin{equation}
+CrashLoc = merge(crashdata, routedata, by=c("lat","lon")
+\label{eqn:Einstein}
+\end{equation}
+
+
+An example of the aggregated data:
+\begin{center}\vspace{1cm}
+\begin{tabular}{l l l l l l}
+\toprule
+\textbf{lat} & \textbf{lon} & \textbf{CrashKey} & \textbf{Weather}& \textbf{PropDMG} \\
+\midrule
+41.4 & 92.9 & 2008000607 & 99 & 2500\\
+41.5 & -92.8 & 2014046739 & 11 & 6000\\
+41.5 & -92.5 & 2004346459 & 166 & 500\\
+\bottomrule
+\end{tabular}
+\captionof{table}{\color{Green} Table caption}
+\end{center}\vspace{1cm}
+
+This data can then be used to connect to a database with additional accident data used for modeling and prediction.
+
+%----------------------------------------------------------------------------------------
+%	RESULTS 
+%----------------------------------------------------------------------------------------
+
+\section*{Results}
+The data was able to show distinct areas where accidents are more likely to occur. The desired route was given a rating based on these areas and was given an overall rating based on how much the potential damage a given route has, the weather conditions that day and a number of other statistically significant variables. This rating provides the groundwork to allow for a more tailored approach to calculating insurance premiums. 
+\begin{center}\vspace{1cm}
+\includegraphics[width=0.8\linewidth]{160930_a.png}
+\captionof{figure}{\color{Green} A map depicting all crashing in Cambridge MA. As you can see, there are certain roads that are more prone to have accidents. }
+\end{center}\vspace{-1cm}
+
+
+
+\begin{center}\vspace{1cm}
+\includegraphics[width=0.8\linewidth]{160930_c.png}
+\captionof{figure}{\color{Green} A density map showing areas of increased accident activity. This shows in a more clear way the trouble area for traffic. You could expect that traffic is heavier here.}
+\end{center}\vspace{1cm}
+
+
+\begin{center}\vspace{-1cm}
+\includegraphics[width=0.8\linewidth]{160930_d.png}
+\captionof{figure}{\color{Green} A rote map produced from the ggmap package in R. This shows the route in which the various accidents will be derived from.}
+\end{center}\vspace{1cm}
+
+
+\begin{center}\vspace{-1cm}
+\includegraphics[width=0.8\linewidth]{histogram.png}
+\captionof{figure}{\color{Green} Histogram depicting the total cost of accidents. Limiting the number of accident that cost under 11,000 dollars would be particularly valuable.}
+\end{center}\vspace{1cm}
+
+%----------------------------------------------------------------------------------------
+%	CONCLUSIONS
+%----------------------------------------------------------------------------------------
+
+\color{SaddleBrown} % SaddleBrown color for the conclusions to make them stand out
+
+\section*{Conclusions}
+
+\begin{itemize}
+\item Data collected on accidents provided the depth of information needed to customize safety ratings for routes. 
+\item The R interface using the ggmap package provided the route details necessary to find troublesome locations along the route chosen.
+\item Crashes and conditions provided details to calculate standardized rating.
+\end{itemize}
+
+\color{DarkSlateGray} % Set the color back to DarkSlateGray for the rest of the content
+
+%----------------------------------------------------------------------------------------
+%	FORTHCOMING RESEARCH
+%----------------------------------------------------------------------------------------
+
+\section*{Discussion}
+The results indicate that the possibility to tailor insurance premiums to an individual or route is plausible. Because road and traffic conditions are constantly changing, algorithm development that accurately predicts the likelihood and cost of these accidents would need to be updated frequently. 
+
+I will look to refine this methodology to improve the safety rating. This would include getting additional historic data that would aid in predicting the safety of routes as trends would be evident and could be modeled for the various routes. Gradient boosting is a common method used in the insurance industry and I would look to harness some of the functionality of that algorithm \cite{guelman2012gradient}. Further, I would like to look at the benefits of a model that rates a person on a more personal level. An example of this is customer churn that is often modeled with random forests \cite{guelman2012random}. 
+
+ %----------------------------------------------------------------------------------------
+%	REFERENCES
+%----------------------------------------------------------------------------------------
+
+\nocite{*} % Print all references regardless of whether they were cited in the poster or not
+\bibliographystyle{plain} % Plain referencing style
+\bibliography{sample} % Use the example bibliography file sample.bib
+
+%----------------------------------------------------------------------------------------
+%	ACKNOWLEDGEMENTS
+%----------------------------------------------------------------------------------------
+
+%\section*{Acknowledgements}
+
+
+
+%----------------------------------------------------------------------------------------
+
+\end{multicols}
+\end{document}
