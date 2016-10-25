@@ -20,7 +20,7 @@ ggmap(map) +
     guides(fill=FALSE, alpha=FALSE, size=FALSE)
 
 
-
+#A good example is noralk, ia to ames, ia
 
 safetyRating <- function(point_a,point_b){
 #Route map
