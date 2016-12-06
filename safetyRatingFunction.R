@@ -5,17 +5,31 @@ library(ggplot2)
 library(plyr)
 library(plotly)
 library(leaflet)
+library(caret)
 
 #Read in crash data
 crashes <- read.csv(file.choose(), header=T)
+numeric_crashes <- Filter(is.numeric, crashes)
 
 #shorten lat/lon numerials by 3
-crashes$Latitude = substr(crashes$Latitude,1,nchar(crashes$Latitude)-3)
-crashes$Longitude = substr(crashes$Longitude,1,nchar(crashes$Longitude)-3)
+numeric_crashes$Latitude = substr(numeric_crashes$Latitude,1,nchar(numeric_crashes$Latitude)-3)
+numeric_crashes$Longitude = substr(numeric_crashes$Longitude,1,nchar(numeric_crashes$Longitude)-3)
 
 #make lat/lon data numeric
-crashes$lat <- as.numeric(crashes$Latitude)
-crashes$lon <- as.numeric(crashes$Longitude)
+numeric_crashes$lat <- as.numeric(numeric_crashes$Latitude)
+numeric_crashes$lon <- as.numeric(numeric_crashes$Longitude)
+
+
+model <- train(PROPDMG ~ .,
+               data = numeric_crashes, # Use the trainSet dataframe as the training data
+               method = "rf",# Use the "random forest" algorithm
+               #tunelength = 15,
+               trControl = trainControl(method = "cv", # Use cross-validation
+                                        number = 5),# Use 5 folds for cross-validation
+               importance = TRUE
+)
+
+varImp(model)
 
 
 safetyRating <- function(point_a,point_b){
@@ -97,10 +111,11 @@ safetyRating <- function(point_a,point_b){
     
     #return(safetyMap)
     
-    crashesalongroute <- merge(route_df,crashes, by=c("lat","lon"))
+    crashesalongroute <- merge(route_df,numeric_crashes, by=c("lat","lon"))
     #return(crashesalongroute,safetyMap)
     
-    rating <- sum(crashesalongroute$INJURIES + crashesalongroute$RDTYP + crashesalongroute$CRASH_DAY)
+    rating <- sum((crashesalongroute$INJURIES*.006779) + (crashesalongroute$VEHICLES*.008381) + (crashesalongroute$MININJURY*.005461)
+                  +(crashesalongroute$MAJINJURY*.004148))
     
     SR <- sprintf("The safety rating for this route is %s", rating)
     
@@ -108,3 +123,5 @@ safetyRating <- function(point_a,point_b){
  return(returns)
     
 }
+
+safetyRating("windsor heights, ia", "lovington, ia")
